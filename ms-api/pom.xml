@@ -60,10 +60,30 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>api</finalName>
+                    <finalName>${project.artifactId}</finalName>
                     <executable>true</executable>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <configuration>
+                    <repository>${parent.artifactId}/${project.artifactId}</repository>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.artifactId}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
