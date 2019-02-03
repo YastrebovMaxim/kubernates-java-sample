@@ -8,15 +8,19 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>ms-api</module>
+        <module>ms-core</module>
     </modules>
     <name>kubernates-java-sample</name>
     <description>Demo project for Spring Boot in Kubernates</description>
     <packaging>pom</packaging>
 
+
     <properties>
         <java.version>1.8</java.version>
         <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
         <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
+        <maven-resources-plugin.encoding>UTF-8</maven-resources-plugin.encoding>
+        <maven-compiler-plugin.encoding>UTF-8</maven-compiler-plugin.encoding>
     </properties>
 
     <dependencyManagement>
@@ -41,10 +45,97 @@
     </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <finalName>${project.artifactId}</finalName>
+                        <executable>true</executable>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>dockerfile-maven-plugin</artifactId>
+                    <configuration>
+                        <repository>${parent.artifactId}/${project.artifactId}</repository>
+                        <buildArgs>
+                            <JAR_FILE>${project.artifactId}.jar</JAR_FILE>
+                        </buildArgs>
+                        <contextDirectory>${project.build.directory}</contextDirectory>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>default</id>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <configuration>
+                        <encoding>${maven-resources-plugin.encoding}</encoding>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>copy-docker-resources</id>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.build.directory}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${my.project.basedir}/docker</directory>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <encoding>${maven-resources-plugin.encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.commonjava.maven.plugins</groupId>
+                <artifactId>directory-maven-plugin</artifactId>
+                <version>0.3.1</version>
+                <executions>
+                    <execution>
+                        <id>directories</id>
+                        <goals>
+                            <goal>directory-of</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <property>my.project.basedir</property>
+                            <project>
+                                <groupId>ru.myastrebov</groupId>
+                                <artifactId>kubernates-java-sample</artifactId>
+                            </project>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

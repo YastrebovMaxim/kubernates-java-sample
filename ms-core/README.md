@@ -1,11 +1,7 @@
-# Simple spring-boot microservice with rest endpoints.
+# Simple spring-boot microservice with rest endpoints
 
-Microservice  interacts with core-ms.
 Application has endpoints:
 ```
-GET /api/ping/{some string}
-    Response: String
-
 GET /api/random/genearte/{some string}
     Response: {String randomString, Integer randomInt}
 ```
@@ -22,7 +18,7 @@ todo
 
 ### Running
 ```
-docker run --rm --name ms-api -p 8080:8080 -d kubernates-java-sample/ms-api:latest
+docker run --rm --name ms-core -p 8080:8080 -d kubernates-java-sample/ms-core:latest
 ```
 ### Check application 
 ```
