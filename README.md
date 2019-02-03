@@ -1,6 +1,6 @@
 # Spring boot microservices in Kubernates
 
-Simple project with Microservice Architecture with Spring Boot, Spring Cloud, Docker and Kubernates
+An example of the simplest Kubernetes-ready project with Spring Boot microservices
 
 ## Getting Started
 ### Installing, build docker images and push to a registry
